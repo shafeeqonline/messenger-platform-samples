@@ -1,6 +1,6 @@
 {
-    "appSecret": "",
-    "pageAccessToken": "",
-    "validationToken": "",
-    "serverURL": ""
+    "appSecret": "68afea3b8a7971302081eeb2fb95f6c6",
+    "pageAccessToken": "EAANnO5rZCAPMBAJ8AuRRrz1tgyORC22LFy8o2JZAXsEGdgx5YvF6qnr3ZAJzThrWY6z7x3GGPzUPjDFg2gZBFFZB1cQ4mSomSMeEYZAIkGSbLpYxZCyoji88F0d1E1yS5So0BH8GViZCerIusRe6zLcUAtDyIy62J5qq4CIPqnv6dwZDZD",
+    "validationToken": "foobar",
+    "serverURL": "https://faf97fcc.ngrok.io/"
 }

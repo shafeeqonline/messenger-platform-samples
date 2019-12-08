@@ -1,0 +1,42 @@
+{
+	"fruits": {
+		"orange": {
+			"moreInformation": "The orange is the fruit of the citrus species Citrus × sinensis in the family Rutaceae, native to China.[1] It is also called sweet orange, to distinguish it from the related Citrus × aurantium, referred to as bitter orange. The sweet orange reproduces asexually (apomixis through nucellar embryony); varieties of sweet orange arise through mutations.",
+			"wiki": "https://en.wikipedia.org/wiki/Orange_(fruit)",
+            "wikiImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Orange-Whole-%26-Split.jpg/220px-Orange-Whole-%26-Split.jpg",
+			"tabs": [{
+				"key": "nutritionGraph",
+                "value": "https://www.verywellfit.com/thmb/Tjt40HQ5mvnlPfNHRz-SpmELuks=/768x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/oranges-annotation-94cf4ef5a5b842a68aa5a0b9e238d630.jpg"
+			}, {
+				"key": "allergies",
+                "value": ["Anaphylaxis", "Itchy nose", "Asthma"]
+			}, {
+				"key": "interestingFacts",
+                "value": "Around 85% of all oranges produced are used for juice."
+			}]
+		},
+        "apple": {
+			"moreInformation": "An apple is a sweet, edible fruit produced by an apple tree (Malus domestica). Apple trees are cultivated worldwide and are the most widely grown species in the genus Malus. The tree originated in Central Asia, where its wild ancestor, Malus sieversii, is still found today. Apples have been grown for thousands of years in Asia and Europe",
+			"wiki": "https://en.wikipedia.org/wiki/Apple",
+            "wikiImage": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Honeycrisp.jpg/220px-Honeycrisp.jpg",
+			"tabs": [{
+				"nutritionGraph": "http://www.nutritionqed.com/wp-content/uploads/2015/03/AppleNutrients-1540x1278_bc.png?x38786"
+			}, {
+				"allergies": ["Birch-pollen", "Itchy throat"]
+			}, {
+				"interestingFacts": "There are more than 8,000 varieties of apples"
+			}]
+		},
+        "mango": {
+			"moreInformation": "",
+			"wiki": "",
+			"tabs": [{
+				"nutritionGraph": ""
+			}, {
+				"allergies": []
+			}, {
+				"interestingFacts": ""
+			}]
+		}
+	}
+}

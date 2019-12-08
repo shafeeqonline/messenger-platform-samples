@@ -16,7 +16,8 @@ const
   crypto = require('crypto'),
   express = require('express'),
   https = require('https'),  
-  request = require('request');
+  request = require('request'),
+  productInfo = require('./fruits-info.json');
 
 var app = express();
 app.set('port', process.env.PORT || 5000);
@@ -64,7 +65,7 @@ if (!(APP_SECRET && VALIDATION_TOKEN && PAGE_ACCESS_TOKEN && SERVER_URL)) {
 app.get('/webhook', function(req, res) {
   if (req.query['hub.mode'] === 'subscribe' &&
       req.query['hub.verify_token'] === VALIDATION_TOKEN) {
-    console.log("Validating webhook");
+    console.log("Validated webhook");
     res.status(200).send(req.query['hub.challenge']);
   } else {
     console.error("Failed validation. Make sure the validation tokens match.");
@@ -141,6 +142,15 @@ app.get('/authorize', function(req, res) {
     redirectURISuccess: redirectURISuccess
   });
 });
+
+function hitPyTorchToprocessImage() {
+  return new Promise(function(resolve, reject) {
+    // the function is executed automatically when the promise is constructed
+  
+    // after 1 second signal that the job is done with the result "done"
+    setTimeout(() => resolve("orange"), 1000);
+  });
+}
 
 /*
  * Verify that the callback came from Facebook. Using the App Secret from 
@@ -244,7 +254,7 @@ function receivedMessage(event) {
     var quickReplyPayload = quickReply.payload;
     console.log("Quick reply for message %s with payload %s",
       messageId, quickReplyPayload);
-
+    // handleQuickReply(senderID, quickReplyPayload)
     sendTextMessage(senderID, "Quick reply tapped");
     return;
   }
@@ -311,7 +321,15 @@ function receivedMessage(event) {
         sendTextMessage(senderID, messageText);
     }
   } else if (messageAttachments) {
-    sendTextMessage(senderID, "Message with attachment received");
+    sendTextMessage(senderID, "Hold on mate! We are processing your image");
+    hitPyTorchToprocessImage()
+    .then(imageType => {
+      sendTextMessage(senderID, "It's an "+ imageType);
+      sendWikiURL(senderID, imageType);
+      // sendTextMessage(senderID, "Here is the nutritional information about "+ imageType);
+      // setTimeout(() => {sendTabs(senderID, imageType);}, 2000);
+      // sendButtonMessage(senderID);
+    })
   }
 }
 
@@ -363,7 +381,7 @@ function receivedPostback(event) {
 
   // When a postback is called, we'll send a message back to the sender to 
   // let them know it was successful
-  sendTextMessage(senderID, "Postback called");
+  sendTextMessage(senderID, payload);
 }
 
 /*
@@ -408,7 +426,8 @@ function receivedAccountLink(event) {
  * Send an image using the Send API.
  *
  */
-function sendImageMessage(recipientId) {
+function sendImageMessage(recipientId, imageType) {
+  const imageData = productInfo.fruits[imageType];// ? productInfo.fruits[imageType] : imageType;
   var messageData = {
     recipient: {
       id: recipientId
@@ -417,7 +436,7 @@ function sendImageMessage(recipientId) {
       attachment: {
         type: "image",
         payload: {
-          url: SERVER_URL + "/assets/rift.png"
+          url: "sdfsdf" //imageData.tabs[0].nutritionGraph
         }
       }
     }
@@ -533,6 +552,39 @@ function sendTextMessage(recipientId, messageText) {
 }
 
 /*
+ * Send a WIKI Webview using the Send API.
+ *
+ */
+function sendWikiURL(recipientId, imageType) {
+  const imageData = productInfo.fruits[imageType];
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    message: {
+      attachment: {
+        type: "template",
+        payload: {
+          template_type: "generic",
+          elements: [{
+            title: "Wikipedia",
+            subtitle: "More information on wiki",
+            item_url: imageData.wiki,               
+            image_url: imageData.wikiImage,
+            buttons: [{
+              type: "web_url",
+              url: imageData.wiki,
+              title: "Open Web URL"
+            }],
+          }]
+        }
+      }
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+/*
  * Send a button message using the Send API.
  *
  */
@@ -620,6 +672,33 @@ function sendGenericMessage(recipientId) {
 }
 
 /*
+ * Send tabs for users response using the Send API.
+ *
+ */
+function sendTabs(recipientId, imageType) {
+  const tabsData = productInfo.fruits[imageType].tabs;
+  const quickReplies = tabsData.map(tab => {
+    return {
+        "content_type":"text",
+        "title": tab.key,
+        "payload": JSON.stringify(tab)
+      }
+  })
+  var messageData = {
+    recipient: {
+      id: recipientId
+    },
+    messaging_type: "RESPONSE",
+    message: {
+      "text": "Need more info?",
+      "quick_replies": quickReplies
+    }
+  };  
+
+  callSendAPI(messageData);
+}
+
+/*
  * Send a receipt message using the Send API.
  *
  */
@@ -683,6 +762,27 @@ function sendReceiptMessage(recipientId) {
   };
 
   callSendAPI(messageData);
+}
+
+function handleQuickReply(senderID, payload) {
+  const parsedPayload = JSON.parse(payload);
+  console.log("shafeeq", parsedPayload);
+  switch(parsedPayload.key) {
+  case 'nutritionGraph':
+    // sendImageMessage(senderID, parsedPayload.value)
+    break;
+  case 'allergies':
+  sendTextMessage(senderID, parsedPayload.value[0])
+    // code block
+    break;
+  case 'interestingFacts':
+    sendTextMessage(senderID, parsedPayload.value)
+  break;
+  default:
+    sendTextMessage(senderID, "Ooooops!!!!")
+    // code block
+}
+
 }
 
 /*
